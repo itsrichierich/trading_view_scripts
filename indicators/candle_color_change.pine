@@ -1,0 +1,57 @@
+//@version=1
+study("Candle Color Change", shorttitle="Candle Color", overlay=true)
+
+// Bollinger Band calculations
+length = input(20, minval=1)
+src = close
+mult = input(2.0, minval=0.001, maxval=50)
+basis = sma(src, length)
+dev = mult * stdev(src, length)
+upper = basis + dev
+lower = basis - dev
+
+// Check portion of the candle which is above or below the bands
+portion_above = max(high - upper, 0)
+portion_below = max(lower - close, 0)
+
+// Check if more than 50% of the candle is outside the bands
+is_above = portion_above > (high - low) * 0.5
+is_below = portion_below > (high - low) * 0.5
+
+// Change candle color based on the conditions
+barcolor(is_above ? color.red : is_below ? color.green
+
+
+
+//@version=2
+study("Candle Color Change", shorttitle="Candle Color", overlay=true)
+
+// Bollinger Band calculations
+length = input(20, minval=1)
+src = close
+mult = input(2.0, minval=0.001, maxval=50)
+basis = sma(src, length)
+dev = mult * stdev(src, length)
+upper = basis + dev
+lower = basis - dev
+
+// Calculate the candle body
+body_high = max(open, close)
+body_low = min(open, close)
+body_size = abs(close - open)
+
+// Check portion of the candle body which is above or below the bands
+portion_above = max(body_high - upper, 0)
+portion_below = max(lower - body_low, 0)
+
+// Check if more than 65% of the candle body is outside the bands
+is_above = portion_above > body_size * 0.35
+is_below = portion_below > body_size * 0.35
+
+// Change candle color based on the conditions
+barcolor(is_above ? color.rgb(22, 85, 22) : is_below ? color.rgb(141, 52, 39) : na)
+
+// Alert conditions
+alertcondition(is_above, title="Above BB Alert", message="More than 65% of the candle is above the upper Bollinger Band!")
+alertcondition(is_below, title="Below BB Alert", message="More than 65% of the candle is below the lower Bollinger Band!")
+//w BB Alert", message="More than 65% of the candle is below the lower Bollinger Band!")
